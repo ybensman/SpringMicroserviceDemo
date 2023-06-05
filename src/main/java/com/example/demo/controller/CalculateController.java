@@ -9,12 +9,7 @@ import com.example.demo.service.CalculationService;
 import com.example.demo.service.PrintConfigService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -29,15 +24,14 @@ public class CalculateController {
     CalculationService hexCalculationService;
 
     CalculateController(PrintConfigService printConfigService,
-                        @Qualifier("decCalculationService")
-                        CalculationService dec,
+                        @Qualifier("decCalculationService") CalculationService dec,
                         @Qualifier("hexCalculationService") CalculationService hex
                         ) {
         this.decCalculationService = dec;
         this.hexCalculationService = hex;
     }
 
-    @RequestMapping("/add/{num1}/{num2}")
+    @GetMapping("/add/{num1}/{num2}")
     // Can be also:
     // @PathVariable(num1) int number1
     // @PathVariable(value = "num1") int number1
@@ -45,7 +39,7 @@ public class CalculateController {
         return num1 + num2;
     }
 
-    @RequestMapping("/add")
+    @GetMapping("/add")
     int add(@RequestParam Integer num1, @RequestParam(required = false) Integer num2) {
         if (num2 == null) {
             num2 = 0;

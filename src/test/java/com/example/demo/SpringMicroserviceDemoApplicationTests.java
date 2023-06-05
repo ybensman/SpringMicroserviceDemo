@@ -13,8 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SpringBootTest(args = "--demo.course.name=SpringBootTest")
 @AutoConfigureMockMvc
-@SpringBootTest
 class SpringMicroserviceDemoApplicationTests {
 
 	@Autowired
@@ -22,9 +22,6 @@ class SpringMicroserviceDemoApplicationTests {
 
 	@Autowired
 	ObjectMapper objectMapper;
-
-//	@MockBean
-//	PrintConfigService calculateService;
 
 	@Test
 	void whenValidInput_thenReturnCorrectResult() throws Exception {
