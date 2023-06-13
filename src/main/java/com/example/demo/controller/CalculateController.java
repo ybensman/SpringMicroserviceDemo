@@ -12,7 +12,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("calculate")
@@ -35,12 +38,13 @@ public class CalculateController {
     // Can be also:
     // @PathVariable(num1) int number1
     // @PathVariable(value = "num1") int number1
-    int add1(@PathVariable @Min(1) int num1, @PathVariable int num2) {
+    int add1(@PathVariable @Min(1) @Max(100) int num1, @PathVariable @Min(1) @Max(100) int num2) {
         return num1 + num2;
     }
 
     @GetMapping("/add")
-    int add(@RequestParam Integer num1, @RequestParam(required = false) Integer num2) {
+    int add(@RequestParam @Min(1) @Max(100) Integer num1,
+            @RequestParam(required = false) @Min(1) @Max(100) Integer num2) {
         if (num2 == null) {
             num2 = 0;
         }
@@ -54,7 +58,7 @@ public class CalculateController {
     }
 
     @PostMapping("/universalAdd")
-    public UniversalCalculateResponse universalAdd(@RequestBody UniversalCalculateRequest request, @RequestParam NumeralSystemName numeralSystem) throws IllegalAccessException{
+    public UniversalCalculateResponse universalAdd(@RequestParam NumeralSystemName numeralSystem, @Valid @RequestBody UniversalCalculateRequest request) throws IllegalAccessException{
         String result = "";
         if (numeralSystem == NumeralSystemName.DEC) {
             result = decCalculationService.addTwoNumbers(request.num1(), request.num2());
@@ -62,8 +66,9 @@ public class CalculateController {
         else if (numeralSystem == NumeralSystemName.HEX) {
             result = hexCalculationService.addTwoNumbers(request.num1(), request.num2());
         }
-        else
+        else {
             throw new IllegalAccessException();
+        }
 
         return new UniversalCalculateResponse(result);
     }
