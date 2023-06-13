@@ -16,6 +16,9 @@ public class PrintConfigService {
     @Value("${demo.course.version}")
     private Double courseVer;
 
+    @Value("${HOME}")
+    private String homeDir;
+
     ServerConfiguration serverConfiguration;
 
     DemoCourseConfiguration demoCourseConfiguration;
@@ -33,6 +36,7 @@ public class PrintConfigService {
         System.out.println("Server configuration: "+ serverConfiguration.toString());
         System.out.println("Demo course configuration: " + demoCourseConfiguration.toString());
         System.out.println("Demo course values: name: " + courseName + ", version: " + courseVer);
-        System.out.println("HOME: " + environment.getProperty("HOME"));
+        System.out.println("HOME (read from Environment Bean): " + environment.getProperty("HOME"));
+        System.out.println("HOME (read by @Value): " + homeDir);
     }
 }
