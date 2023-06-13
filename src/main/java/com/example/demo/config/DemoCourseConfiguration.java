@@ -1,26 +1,41 @@
 package com.example.demo.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import java.util.List;
 
 @ConfigurationProperties("demo.course")
+@Validated
 public class DemoCourseConfiguration {
+    @Positive
     private Double version;
+    @NotBlank
     private String name;
+    @NotBlank
+    private String endPoint;
 
-    public Double getVersion() {
-        return version;
-    }
+    @NestedConfigurationProperty
+    List<DemoCourseProjectConfiguration> projects;
 
     public void setVersion(Double version) {
         this.version = version;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    public void setProjects(List<DemoCourseProjectConfiguration> projects) {
+        this.projects = projects;
     }
 
     @Override
@@ -28,6 +43,8 @@ public class DemoCourseConfiguration {
         return "DemoCourseConfiguration{" +
                 "version=" + version +
                 ", name='" + name + '\'' +
+                ", endPoint='" + endPoint + '\'' +
+                ", projects='" + projects + '\'' +
                 '}';
     }
 }

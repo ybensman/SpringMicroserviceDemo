@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(args = "--demo.course.name=SpringBootTest")
+@SpringBootTest(properties = "--demo.course.name=SpringBootTest")
 @AutoConfigureMockMvc
 class SpringMicroserviceDemoApplicationTests {
 
