@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.config.CalculateConfiguration;
+import com.example.demo.errorhandling.FeatureNotAvailableException;
 import com.example.demo.model.CalculateRequest;
 import com.example.demo.model.CalculateResponse;
 import com.example.demo.model.NumeralSystemName;
@@ -23,12 +25,16 @@ public class CalculateController {
     CalculationService decCalculationService;
     CalculationService hexCalculationService;
 
+    CalculateConfiguration calculateConfiguration;
+
     CalculateController(PrintConfigService printConfigService,
                         @Qualifier("decCalculationService") CalculationService dec,
-                        @Qualifier("hexCalculationService") CalculationService hex
+                        @Qualifier("hexCalculationService") CalculationService hex,
+                        CalculateConfiguration calculateConfiguration
                         ) {
         this.decCalculationService = dec;
         this.hexCalculationService = hex;
+        this.calculateConfiguration = calculateConfiguration;
     }
 
     @GetMapping("/add/{num1}/{num2}")
@@ -54,7 +60,12 @@ public class CalculateController {
     }
 
     @PostMapping("/universalAdd")
-    public UniversalCalculateResponse universalAdd(@RequestBody UniversalCalculateRequest request, @RequestParam NumeralSystemName numeralSystem) throws IllegalAccessException{
+    public UniversalCalculateResponse universalAdd(@RequestBody UniversalCalculateRequest request, @RequestParam NumeralSystemName numeralSystem)
+                                    throws IllegalAccessException, FeatureNotAvailableException{
+        if (calculateConfiguration.isAvailable() == false) {
+            throw new FeatureNotAvailableException();
+        }
+
         String result = "";
         if (numeralSystem == NumeralSystemName.DEC) {
             result = decCalculationService.addTwoNumbers(request.num1(), request.num2());

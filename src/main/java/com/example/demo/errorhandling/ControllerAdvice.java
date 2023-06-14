@@ -23,4 +23,10 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>("Illegal number format exception", BAD_REQUEST);
     }
 
+    @ExceptionHandler(FeatureNotAvailableException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public ResponseEntity<String> handleFeatureNotAvailableException(FeatureNotAvailableException ex) {
+        return new ResponseEntity<>("Feature is not available", BAD_REQUEST);
+    }
+
 }
