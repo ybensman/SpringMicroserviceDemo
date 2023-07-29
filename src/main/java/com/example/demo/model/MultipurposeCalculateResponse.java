@@ -1,5 +1,5 @@
 package com.example.demo.model;
 
-public record UniversalCalculateResponse(
+public record MultipurposeCalculateResponse(
     String result) {
 }

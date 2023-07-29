@@ -2,7 +2,7 @@ package com.example.demo.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("app.universal-add")
+@ConfigurationProperties("app.multipurpose-add")
 public class CalculateConfiguration {
     private boolean available;
     private Integer min;
