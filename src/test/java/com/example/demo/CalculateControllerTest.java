@@ -2,15 +2,14 @@ package com.example.demo;
 
 import com.example.demo.controller.CalculateController;
 import com.example.demo.service.CalculationService;
-import com.example.demo.service.CalculationServiceFactory;
 import com.example.demo.service.PrintConfigService;
+import com.example.demo.service.RandomNumbersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -38,6 +37,9 @@ class CalculateControllerTest {
     @MockBean
     @Qualifier("hexCalculationService")
     CalculationService hexCalculationService;
+
+    @MockBean
+    RandomNumbersService randomNumbersService;
 
     @Test
     void testAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
