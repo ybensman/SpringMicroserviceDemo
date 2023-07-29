@@ -69,9 +69,27 @@ class CalculateControllerTest {
     }
 
     @Test
+    void testGetMultipurposeAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
+
+        Mockito.when(calculateConfiguration.isAvailable()).thenReturn(true);
+        Mockito.when(decCalculationService.addTwoNumbers("1", "2")).thenReturn("3");
+
+        int num1 = 1, num2 = 2;
+
+        mockMvc.perform(get("/calculate/multipurposeAdd")
+                        .param("num1", "1")
+                        .param("num2", "2")
+                        .param("numeralSystem","DEC"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(num1 + num2)))
+        ;
+    }
+
+    @Test
     void testMultipurposeAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
 
         Mockito.when(calculateConfiguration.isAvailable()).thenReturn(true);
+        Mockito.when(decCalculationService.addTwoNumbers("1", "2")).thenReturn("3");
 
         int num1 = 1, num2 = 2;
         String body = """
@@ -85,12 +103,13 @@ class CalculateControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("numeralSystem","DEC")
                         .content(body))
-                .andExpect(status().isOk());
-        //.andExpect(jsonPath("$.result", is(String.valueOf(num1 + num2))));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", is(String.valueOf(num1 + num2))))
+        ;
     }
 
     @Test
-    void testMultipurposeAdd_whenMissingRequestParam_returnBadRequest() throws Exception {
+    void testMultipurposeAdd_whenMissingNumeralSystem_returnBadRequest() throws Exception {
         int num1 = 1, num2 = 10;
         String body = """
                         {
