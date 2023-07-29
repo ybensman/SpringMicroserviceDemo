@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.config.CalculateConfiguration;
-import com.example.demo.errorhandling.FeatureNotAvailableException;
 import com.example.demo.service.CalculationService;
-import com.example.demo.service.PrintConfigService;
 import com.example.demo.model.CalculateRequest;
 import com.example.demo.model.CalculateResponse;
 import com.example.demo.model.NumeralSystemName;
@@ -11,18 +9,11 @@ import com.example.demo.model.MultipurposeCalculateRequest;
 import com.example.demo.model.MultipurposeCalculateResponse;
 import com.example.demo.service.RandomNumbersService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 @RestController
 @RequestMapping("calculate")
-@Validated
 public class CalculateController {
-    PrintConfigService printConfigService;
 
     CalculationService decCalculationService;
     CalculationService hexCalculationService;
@@ -30,7 +21,7 @@ public class CalculateController {
 
     CalculateConfiguration calculateConfiguration;
 
-    CalculateController(PrintConfigService printConfigService,
+    CalculateController(
                         RandomNumbersService randomNumbersService,
                         @Qualifier("decCalculationService") CalculationService dec,
                         @Qualifier("hexCalculationService") CalculationService hex,
@@ -51,13 +42,13 @@ public class CalculateController {
     // Can be also:
     // @PathVariable(num1) int number1
     // @PathVariable(value = "num1") int number1
-    int add1(@PathVariable @Min(1) @Max(100) int num1, @PathVariable @Min(1) @Max(100) int num2) {
+    int add1(@PathVariable int num1, @PathVariable int num2) {
         return num1 + num2;
     }
 
     @GetMapping("/decimalAdd")
-    int decimalAdd(@RequestParam @Min(1) @Max(100) Integer num1,
-            @RequestParam(required = false) @Min(1) @Max(100) Integer num2) {
+    int decimalAdd(@RequestParam Integer num1,
+            @RequestParam(required = false) Integer num2) {
         if (num2 == null) {
             num2 = 0;
         }
@@ -88,15 +79,15 @@ public class CalculateController {
     }
 
     @PostMapping("/add")
-    public CalculateResponse add(@Valid @RequestBody CalculateRequest request) {
+    public CalculateResponse add(@RequestBody CalculateRequest request) {
         return new CalculateResponse(request.num1 + request.num2);
     }
 
     @PostMapping("/multipurposeAdd")
-    public MultipurposeCalculateResponse multipurposeAdd(@RequestParam NumeralSystemName numeralSystem, @Valid @RequestBody MultipurposeCalculateRequest request) throws IllegalAccessException, FeatureNotAvailableException{
-       if (calculateConfiguration.isAvailable() == false) {
-           throw new FeatureNotAvailableException();
-       }
+    public MultipurposeCalculateResponse multipurposeAdd(@RequestParam NumeralSystemName numeralSystem, @RequestBody MultipurposeCalculateRequest request) throws IllegalAccessException {
+//       if (calculateConfiguration.isAvailable() == false) {
+//           throw new FeatureNotAvailableException();
+//       }
 
         String result;
         if (numeralSystem == NumeralSystemName.DEC) {

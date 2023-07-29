@@ -60,18 +60,28 @@ class CalculateControllerTest {
     }
 
     @Test
-    void testAdd_whenInvalidInput_thenReturnBadRequest() throws Exception {
-        int num1 = 1, num2 = 102;
+    void testGetMultipurposeAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
 
-        mockMvc.perform(get("/calculate/add/{num1}/{num2}", num1, num2))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("Input validation failed: add1.num2: must be less than or equal to 100"));
+        Mockito.when(calculateConfiguration.isAvailable()).thenReturn(true);
+        Mockito.when(decCalculationService.addTwoNumbers("1", "2")).thenReturn("3");
+
+        int num1 = 1, num2 = 2;
+
+        mockMvc.perform(get("/calculate/multipurposeAdd")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("num1", "1")
+                        .param("num2", "2")
+                        .param("numeralSystem","DEC"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(num1 + num2)))
+        ;
     }
 
     @Test
     void testMultipurposeAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
 
         Mockito.when(calculateConfiguration.isAvailable()).thenReturn(true);
+        Mockito.when(decCalculationService.addTwoNumbers("1", "2")).thenReturn("3");
 
         int num1 = 1, num2 = 2;
         String body = """
@@ -85,8 +95,9 @@ class CalculateControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("numeralSystem","DEC")
                         .content(body))
-                .andExpect(status().isOk());
-        //.andExpect(jsonPath("$.result", is(String.valueOf(num1 + num2))));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", is(String.valueOf(num1 + num2))))
+        ;
     }
 
     @Test
@@ -107,7 +118,7 @@ class CalculateControllerTest {
     }
 
     @Test
-    void testMultipurposeAdd_whenInvalidRequestParam_thenReturnBadRequest() throws Exception {
+    void testMultipurposeAdd_whenInvalidNumeralSystem_thenReturnBadRequest() throws Exception {
 
         Mockito.when(calculateConfiguration.isAvailable()).thenReturn(true);
 
@@ -125,25 +136,6 @@ class CalculateControllerTest {
                         .content(body))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Illegal Access!"))
-        ;
-    }
-
-    @Test
-    void testMultipurposeAdd_whenInvalidInputBody_returnBadRequest() throws Exception {
-        int num1 = 1, num2 = 101;
-        String body = """
-                        {
-                            "num1": %d,
-                            "num2": %d
-                        }
-                        """.formatted(num1, num2);
-
-        mockMvc.perform(post("/calculate/multipurposeAdd")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("numeralSystem", "DEC")
-                        .content(body))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(is(startsWith("Input validation failed"))))
         ;
     }
 }
