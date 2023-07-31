@@ -7,14 +7,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CalculationServiceFactory {
 
-    @Bean
-    @Qualifier("decCalculationService")
+    @Bean("decCalculationService")
     CalculationService decimalCalculationService() {
         return new CalculationService(10);
     }
 
-    @Bean
-    @Qualifier("hexCalculationService")
+    @Bean("hexCalculationService")
     CalculationService hexadecimalCalculationService() {
         return new CalculationService(16);
     }
