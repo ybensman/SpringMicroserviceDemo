@@ -9,9 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(properties = "--demo.course.name=SpringBootTest")
 @AutoConfigureMockMvc
@@ -24,7 +26,74 @@ class SpringMicroserviceDemoApplicationTests {
 	ObjectMapper objectMapper;
 
 	@Test
-	void whenValidInput_thenReturnCorrectResult() throws Exception {
+	void testAddPathVariables_whenValidInput_thenReturnCorrectResult() throws Exception {
+		int num1 = 1, num2 = 2;
+
+		mockMvc.perform(get("/calculate/add/{num1}/{num2}", num1, num2))
+				.andExpect(status().isOk())
+				.andExpect(content().string(String.valueOf(num1 + num2)))
+		;
+	}
+
+	@Test
+	void testAddRequestParams_whenValidInput_thenReturnCorrectResult() throws Exception {
+		int num1 = 1, num2 = 2;
+		String expectedValue = String.valueOf(num1 + num2);
+
+		mockMvc.perform(get("/calculate/decimalAdd")
+						.param("num1", String.valueOf(num1))
+						.param("num2", String.valueOf(num2)))
+				.andExpect(status().isOk())
+				.andExpect(content().string(expectedValue))
+		;
+	}
+
+	@Test
+	void testMultipurposeAdd_whenValidInputDecimalRadix_thenReturnCorrectResult() throws Exception {
+		int num1 = 1, num2 = 9;
+		int radix = 10;
+		String expectedResult = Integer.toString(num1 + num2, radix);
+
+		mockMvc.perform(get("/calculate/multipurposeAdd")
+						.param("num1", String.valueOf(num1))
+						.param("num2", String.valueOf(num2))
+						.param("numeralSystem", "DEC"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(expectedResult))
+				;
+	}
+
+	@Test
+	void testMultipurposeAdd_whenValidInputHexRadix_thenReturnCorrectResult() throws Exception {
+		int num1 = 1, num2 = 9;
+		int radix = 16;
+		String expectedResult = Integer.toString(num1 + num2, radix);
+
+		mockMvc.perform(get("/calculate/multipurposeAdd")
+						.param("num1", String.valueOf(num1))
+						.param("num2", String.valueOf(num2))
+						.param("numeralSystem", "HEX"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(expectedResult))
+		;
+	}
+
+	@Test
+	void testMultipurposeAdd_whenValidHexInputHexRadix_thenReturnCorrectResult() throws Exception {
+		String num1 = "1", num2 = "f";
+		String expectedResult = "10";
+
+		mockMvc.perform(get("/calculate/multipurposeAdd")
+						.param("num1", num1)
+						.param("num2", num2)
+						.param("numeralSystem", "HEX"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(expectedResult))
+		;
+	}
+
+	@Test
+	void testMultipurposeAddRequestBody_whenValidInput_thenReturnCorrectResult() throws Exception {
 		int num1 = 1, num2 = 2;
 		String body = """
                         {
@@ -33,17 +102,28 @@ class SpringMicroserviceDemoApplicationTests {
                         }
                         """.formatted(num1, num2);
 
-		var response = mockMvc.perform(post("/calculate/add")
+		String result = mockMvc.perform(post("/calculate/multipurposeAdd")
 						.contentType(MediaType.APPLICATION_JSON)
+						.param("numeralSystem", "DEC")
 						.content(body))
 				.andExpect(status().isOk())
 				.andReturn()
 				.getResponse()
 				.getContentAsString();
 
-		var calculateResponse = objectMapper.readValue(response, CalculateResponse.class);
+		CalculateResponse response = objectMapper.readValue(result, CalculateResponse.class);
+		assertThat(response.result(), equalTo(num1 + num2));
 
-		assertThat(calculateResponse.result()).isEqualTo(num1 + num2);
+		//
+		// Another way to test it
+		//
+		mockMvc.perform(post("/calculate/multipurposeAdd")
+						.contentType(MediaType.APPLICATION_JSON)
+						.param("numeralSystem", "DEC")
+						.content(body))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.result", is(String.valueOf(num1 + num2))))
+		;
 	}
 
 }

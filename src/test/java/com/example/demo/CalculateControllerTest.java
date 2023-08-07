@@ -6,7 +6,6 @@ import com.example.demo.service.CalculationService;
 import com.example.demo.service.CalculationServiceFactory;
 import com.example.demo.service.PrintConfigService;
 import com.example.demo.service.RandomNumbersService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CalculateControllerTest {
     @Autowired
     MockMvc mockMvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
 
     @MockBean
     PrintConfigService printConfigService;
