@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.config.CalculateConfiguration;
 import com.example.demo.errorhandling.FeatureNotAvailableException;
 import com.example.demo.service.CalculationService;
-import com.example.demo.service.PrintConfigService;
 import com.example.demo.model.CalculateRequest;
 import com.example.demo.model.CalculateResponse;
 import com.example.demo.model.NumeralSystemName;
@@ -22,16 +21,13 @@ import javax.validation.constraints.Min;
 @RequestMapping("calculate")
 @Validated
 public class CalculateController {
-    PrintConfigService printConfigService;
-
     CalculationService decCalculationService;
     CalculationService hexCalculationService;
     RandomNumbersService randomNumbersService;
 
     CalculateConfiguration calculateConfiguration;
 
-    CalculateController(PrintConfigService printConfigService,
-                        RandomNumbersService randomNumbersService,
+    CalculateController(RandomNumbersService randomNumbersService,
                         @Qualifier("decCalculationService") CalculationService dec,
                         @Qualifier("hexCalculationService") CalculationService hex,
                         CalculateConfiguration calculateConfiguration
