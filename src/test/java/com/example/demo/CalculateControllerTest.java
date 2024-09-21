@@ -74,6 +74,23 @@ class CalculateControllerTest {
     }
 
     @Test
+    void testGetMultipurposeAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
+
+        Mockito.when(calculateConfiguration.isAvailable()).thenReturn(true);
+        Mockito.when(decCalculationService.addTwoNumbers("1", "2")).thenReturn("3");
+
+        int num1 = 1, num2 = 2;
+
+        mockMvc.perform(get("/calculate/multipurposeAdd")
+                        .param("num1", "1")
+                        .param("num2", "2")
+                        .param("numeralSystem","DEC"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(num1 + num2)))
+        ;
+    }
+
+    @Test
     void testMultipurposeAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
 
         Mockito.when(calculateConfiguration.isAvailable()).thenReturn(true);
@@ -97,7 +114,7 @@ class CalculateControllerTest {
     }
 
     @Test
-    void testMultipurposeAdd_whenMissingRequestParam_returnBadRequest() throws Exception {
+    void testMultipurposeAdd_whenMissingNumeralSystem_returnBadRequest() throws Exception {
         int num1 = 1, num2 = 10;
         String body = """
                         {

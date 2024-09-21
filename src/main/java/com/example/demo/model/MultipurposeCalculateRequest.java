@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 public record MultipurposeCalculateRequest(
         @NotNull
