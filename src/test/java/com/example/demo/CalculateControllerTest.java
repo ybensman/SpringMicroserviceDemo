@@ -30,12 +30,10 @@ class CalculateControllerTest {
     @MockBean
     PrintConfigService printConfigService;
 
-    @MockBean
-    @Qualifier("decCalculationService")
+    @MockBean(name = "decCalculationService")
     CalculationService decCalculationService;
 
-    @MockBean
-    @Qualifier("hexCalculationService")
+    @MockBean(name = "hexCalculationService")
     CalculationService hexCalculationService;
 
     @MockBean
@@ -100,7 +98,7 @@ class CalculateControllerTest {
                         .param("numeralSystem","DEC")
                         .content(body))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result", is(String.valueOf(num1 + num2))))
+                .andExpect(jsonPath("$.result").value(String.valueOf(num1 + num2)))
         ;
     }
 
