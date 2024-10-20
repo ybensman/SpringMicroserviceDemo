@@ -90,7 +90,7 @@ public class CalculateController {
 
     @PostMapping("/multipurposeAdd")
     public MultipurposeCalculateResponse multipurposeAdd(@RequestParam NumeralSystemName numeralSystem, @Valid @RequestBody MultipurposeCalculateRequest request) throws IllegalAccessException, FeatureNotAvailableException{
-       if (calculateConfiguration.isAvailable() == false) {
+       if (!calculateConfiguration.available()) {
            throw new FeatureNotAvailableException();
        }
 

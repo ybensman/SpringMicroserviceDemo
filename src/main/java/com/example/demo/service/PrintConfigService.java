@@ -25,7 +25,8 @@ public class PrintConfigService {
 
     Environment environment;
 
-    PrintConfigService(ServerConfiguration serverConfiguration, DemoCourseConfiguration demoCourseConfiguration, Environment environment) {
+    PrintConfigService(ServerConfiguration serverConfiguration,
+                       DemoCourseConfiguration demoCourseConfiguration, Environment environment) {
         this.serverConfiguration = serverConfiguration;
         this.demoCourseConfiguration = demoCourseConfiguration;
         this.environment = environment;

@@ -65,7 +65,7 @@ class CalculateControllerTest {
     @Test
     void testGetMultipurposeAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
 
-        Mockito.when(calculateConfiguration.isAvailable()).thenReturn(true);
+        Mockito.when(calculateConfiguration.available()).thenReturn(true);
         Mockito.when(decCalculationService.addTwoNumbers("1", "2")).thenReturn("3");
 
         int num1 = 1, num2 = 2;
@@ -82,7 +82,7 @@ class CalculateControllerTest {
     @Test
     void testMultipurposeAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
 
-        Mockito.when(calculateConfiguration.isAvailable()).thenReturn(true);
+        Mockito.when(calculateConfiguration.available()).thenReturn(true);
         Mockito.when(decCalculationService.addTwoNumbers("1", "2")).thenReturn("3");
 
         int num1 = 1, num2 = 2;
@@ -122,7 +122,7 @@ class CalculateControllerTest {
     @Test
     void testMultipurposeAdd_whenInvalidRequestParam_thenReturnBadRequest() throws Exception {
 
-        Mockito.when(calculateConfiguration.isAvailable()).thenReturn(true);
+        Mockito.when(calculateConfiguration.available()).thenReturn(true);
 
         int num1 = 1, num2 = 10;
         String body = """
