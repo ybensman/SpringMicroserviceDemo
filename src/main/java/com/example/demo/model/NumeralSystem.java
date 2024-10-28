@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-public enum NumeralSystemName {
+public enum NumeralSystem {
     DEC,
     HEX,
     OCT

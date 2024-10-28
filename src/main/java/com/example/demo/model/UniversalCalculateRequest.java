@@ -2,7 +2,7 @@ package com.example.demo.model;
 
 import jakarta.validation.constraints.*;
 
-public record MultipurposeCalculateRequest(
+public record UniversalCalculateRequest(
         @NotNull
         @NotBlank
         @Min(1)

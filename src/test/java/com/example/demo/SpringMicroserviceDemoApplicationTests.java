@@ -26,7 +26,7 @@ class SpringMicroserviceDemoApplicationTests {
 	ObjectMapper objectMapper;
 
 	@Test
-	void testAddPathVariables_whenValidInput_thenReturnCorrectResult() throws Exception {
+	void givenAddPathVariables_whenValidInput_thenReturnCorrectResult() throws Exception {
 		int num1 = 1, num2 = 2;
 
 		mockMvc.perform(get("/calculate/add/{num1}/{num2}", num1, num2))
@@ -36,7 +36,7 @@ class SpringMicroserviceDemoApplicationTests {
 	}
 
 	@Test
-	void testAddRequestParams_whenValidInput_thenReturnCorrectResult() throws Exception {
+	void givenAddRequestParams_whenValidInput_thenReturnCorrectResult() throws Exception {
 		int num1 = 1, num2 = 2;
 		String expectedValue = String.valueOf(num1 + num2);
 
@@ -49,12 +49,12 @@ class SpringMicroserviceDemoApplicationTests {
 	}
 
 	@Test
-	void testMultipurposeAdd_whenValidInputDecimalRadix_thenReturnCorrectResult() throws Exception {
+	void givenUniversalAdd_whenValidInputDecimalRadix_thenReturnCorrectResult() throws Exception {
 		int num1 = 1, num2 = 9;
 		int radix = 10;
 		String expectedResult = Integer.toString(num1 + num2, radix);
 
-		mockMvc.perform(get("/calculate/multipurposeAdd")
+		mockMvc.perform(get("/calculate/universalAdd")
 						.param("num1", String.valueOf(num1))
 						.param("num2", String.valueOf(num2))
 						.param("numeralSystem", "DEC"))
@@ -64,12 +64,12 @@ class SpringMicroserviceDemoApplicationTests {
 	}
 
 	@Test
-	void testMultipurposeAdd_whenValidInputHexRadix_thenReturnCorrectResult() throws Exception {
+	void givenUniversalAdd_whenValidInputHexRadix_thenReturnCorrectResult() throws Exception {
 		int num1 = 1, num2 = 9;
 		int radix = 16;
 		String expectedResult = Integer.toString(num1 + num2, radix);
 
-		mockMvc.perform(get("/calculate/multipurposeAdd")
+		mockMvc.perform(get("/calculate/universalAdd")
 						.param("num1", String.valueOf(num1))
 						.param("num2", String.valueOf(num2))
 						.param("numeralSystem", "HEX"))
@@ -79,11 +79,11 @@ class SpringMicroserviceDemoApplicationTests {
 	}
 
 	@Test
-	void testMultipurposeAdd_whenValidHexInputHexRadix_thenReturnCorrectResult() throws Exception {
+	void givenUniversalAdd_whenValidHexInputHexRadix_thenReturnCorrectResult() throws Exception {
 		String num1 = "1", num2 = "f";
 		String expectedResult = "10";
 
-		mockMvc.perform(get("/calculate/multipurposeAdd")
+		mockMvc.perform(get("/calculate/universalAdd")
 						.param("num1", num1)
 						.param("num2", num2)
 						.param("numeralSystem", "HEX"))
@@ -93,7 +93,7 @@ class SpringMicroserviceDemoApplicationTests {
 	}
 
 	@Test
-	void testMultipurposeAddRequestBody_whenValidInput_thenReturnCorrectResult() throws Exception {
+	void givenUniversalAddRequestBody_whenValidInput_thenReturnCorrectResult() throws Exception {
 		int num1 = 1, num2 = 2;
 		String body = """
                         {
@@ -102,7 +102,7 @@ class SpringMicroserviceDemoApplicationTests {
                         }
                         """.formatted(num1, num2);
 
-		String result = mockMvc.perform(post("/calculate/multipurposeAdd")
+		String result = mockMvc.perform(post("/calculate/universalAdd")
 						.contentType(MediaType.APPLICATION_JSON)
 						.param("numeralSystem", "DEC")
 						.content(body))
@@ -117,7 +117,7 @@ class SpringMicroserviceDemoApplicationTests {
 		//
 		// Another way to test it
 		//
-		mockMvc.perform(post("/calculate/multipurposeAdd")
+		mockMvc.perform(post("/calculate/universalAdd")
 						.contentType(MediaType.APPLICATION_JSON)
 						.param("numeralSystem", "DEC")
 						.content(body))

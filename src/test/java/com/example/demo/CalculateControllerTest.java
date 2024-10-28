@@ -45,7 +45,7 @@ class CalculateControllerTest {
 
 
     @Test
-    void testAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
+    void givenAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
         int num1 = 1, num2 = 2;
 
         mockMvc.perform(get("/calculate/add/{num1}/{num2}", num1, num2))
@@ -54,7 +54,7 @@ class CalculateControllerTest {
     }
 
     @Test
-    void testAdd_whenInvalidInput_thenReturnBadRequest() throws Exception {
+    void givenAdd_whenInvalidInput_thenReturnBadRequest() throws Exception {
         int num1 = 1, num2 = 102;
 
         mockMvc.perform(get("/calculate/add/{num1}/{num2}", num1, num2))
@@ -63,14 +63,14 @@ class CalculateControllerTest {
     }
 
     @Test
-    void testGetMultipurposeAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
+    void givenGetUniversalAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
 
         Mockito.when(calculateConfiguration.available()).thenReturn(true);
         Mockito.when(decCalculationService.addTwoNumbers("1", "2")).thenReturn("3");
 
         int num1 = 1, num2 = 2;
 
-        mockMvc.perform(get("/calculate/multipurposeAdd")
+        mockMvc.perform(get("/calculate/universalAdd")
                         .param("num1", "1")
                         .param("num2", "2")
                         .param("numeralSystem","DEC"))
@@ -80,7 +80,7 @@ class CalculateControllerTest {
     }
 
     @Test
-    void testMultipurposeAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
+    void givenUniversalAdd_whenValidInput_thenReturnCorrectResult() throws Exception {
 
         Mockito.when(calculateConfiguration.available()).thenReturn(true);
         Mockito.when(decCalculationService.addTwoNumbers("1", "2")).thenReturn("3");
@@ -93,7 +93,7 @@ class CalculateControllerTest {
                         }
                         """.formatted(num1, num2);
 
-        mockMvc.perform(post("/calculate/multipurposeAdd")
+        mockMvc.perform(post("/calculate/universalAdd")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("numeralSystem","DEC")
                         .content(body))
@@ -103,7 +103,7 @@ class CalculateControllerTest {
     }
 
     @Test
-    void testMultipurposeAdd_whenMissingNumeralSystem_returnBadRequest() throws Exception {
+    void givenUniversalAdd_whenMissingNumeralSystem_returnBadRequest() throws Exception {
         int num1 = 1, num2 = 10;
         String body = """
                         {
@@ -112,7 +112,7 @@ class CalculateControllerTest {
                         }
                         """.formatted(num1, num2);
 
-        mockMvc.perform(post("/calculate/multipurposeAdd")
+        mockMvc.perform(post("/calculate/universalAdd")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isBadRequest())
@@ -120,7 +120,7 @@ class CalculateControllerTest {
     }
 
     @Test
-    void testMultipurposeAdd_whenInvalidRequestParam_thenReturnBadRequest() throws Exception {
+    void givenUniversalAdd_whenInvalidRequestParam_thenReturnBadRequest() throws Exception {
 
         Mockito.when(calculateConfiguration.available()).thenReturn(true);
 
@@ -132,7 +132,7 @@ class CalculateControllerTest {
                         }
                         """.formatted(num1, num2);
 
-        mockMvc.perform(post("/calculate/multipurposeAdd")
+        mockMvc.perform(post("/calculate/universalAdd")
                         .param("numeralSystem", "OCT")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
@@ -142,7 +142,7 @@ class CalculateControllerTest {
     }
 
     @Test
-    void testMultipurposeAdd_whenInvalidInputBody_returnBadRequest() throws Exception {
+    void givenUniversalAdd_whenInvalidInputBody_returnBadRequest() throws Exception {
         int num1 = 1, num2 = 101;
         String body = """
                         {
@@ -151,7 +151,7 @@ class CalculateControllerTest {
                         }
                         """.formatted(num1, num2);
 
-        mockMvc.perform(post("/calculate/multipurposeAdd")
+        mockMvc.perform(post("/calculate/universalAdd")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("numeralSystem", "DEC")
                         .content(body))

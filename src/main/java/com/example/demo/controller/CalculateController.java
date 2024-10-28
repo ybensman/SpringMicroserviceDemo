@@ -2,12 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.config.CalculateConfiguration;
 import com.example.demo.errorhandling.FeatureNotAvailableException;
+import com.example.demo.errorhandling.NumsLimitExceededException;
 import com.example.demo.service.CalculationService;
 import com.example.demo.model.CalculateRequest;
 import com.example.demo.model.CalculateResponse;
-import com.example.demo.model.NumeralSystemName;
-import com.example.demo.model.MultipurposeCalculateRequest;
-import com.example.demo.model.MultipurposeCalculateResponse;
+import com.example.demo.model.NumeralSystem;
+import com.example.demo.model.UniversalCalculateRequest;
+import com.example.demo.model.UniversalCalculateResponse;
 import com.example.demo.service.RandomNumbersService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("calculate")
@@ -61,19 +64,19 @@ public class CalculateController {
         return num1 + num2;
     }
 
-    @GetMapping("/multipurposeAdd")
-    String multipurposeAdd(@RequestParam String num1, @RequestParam String num2,
-                    @RequestParam(required = false) NumeralSystemName numeralSystem) throws IllegalAccessException {
+    @GetMapping("/universalAdd")
+    String universalAdd(@RequestParam String num1, @RequestParam String num2,
+                    @RequestParam(required = false) NumeralSystem numeralSystem) throws IllegalAccessException {
 
         if (numeralSystem == null) {
-            numeralSystem = NumeralSystemName.DEC;
+            numeralSystem = NumeralSystem.DEC;
         }
 
         String result;
-        if (numeralSystem == NumeralSystemName.DEC) {
+        if (numeralSystem == NumeralSystem.DEC) {
             result = decCalculationService.addTwoNumbers(num1, num2);
         }
-        else if (numeralSystem == NumeralSystemName.HEX) {
+        else if (numeralSystem == NumeralSystem.HEX) {
             result = hexCalculationService.addTwoNumbers(num1, num2);
         }
         else {
@@ -88,23 +91,32 @@ public class CalculateController {
         return new CalculateResponse(request.num1 + request.num2);
     }
 
-    @PostMapping("/multipurposeAdd")
-    public MultipurposeCalculateResponse multipurposeAdd(@RequestParam NumeralSystemName numeralSystem, @Valid @RequestBody MultipurposeCalculateRequest request) throws IllegalAccessException, FeatureNotAvailableException{
-       if (!calculateConfiguration.available()) {
-           throw new FeatureNotAvailableException();
-       }
-
+    @PostMapping("/universalAdd")
+    public UniversalCalculateResponse universalAdd(@RequestParam NumeralSystem numeralSystem, @Valid @RequestBody UniversalCalculateRequest request) throws IllegalAccessException {
         String result;
-        if (numeralSystem == NumeralSystemName.DEC) {
+        if (numeralSystem == NumeralSystem.DEC) {
             result = decCalculationService.addTwoNumbers(request.num1(), request.num2());
         }
-        else if (numeralSystem == NumeralSystemName.HEX) {
+        else if (numeralSystem == NumeralSystem.HEX) {
             result = hexCalculationService.addTwoNumbers(request.num1(), request.num2());
         }
         else {
             throw new IllegalAccessException();
         }
 
-        return new MultipurposeCalculateResponse(result);
+        return new UniversalCalculateResponse(result);
+    }
+
+    @GetMapping("/sumNumbers")
+    public int sumNumbers(@RequestParam List<Integer> nums) {
+        if (!calculateConfiguration.available()) {
+            throw new FeatureNotAvailableException();
+        }
+
+        if (nums.size() > calculateConfiguration.limit()) {
+            throw new NumsLimitExceededException();
+        }
+
+        return nums.stream().reduce(0, Integer::sum);
     }
 }

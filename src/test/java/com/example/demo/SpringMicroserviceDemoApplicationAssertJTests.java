@@ -23,7 +23,7 @@ class SpringMicroserviceDemoApplicationAssertJTests {
     ObjectMapper objectMapper;
 
     @Test
-    void testAddRequestBody_WhenValidInput_ReturnCorrectResult() throws Exception {
+    void givenAddRequestBody_WhenValidInput_ReturnCorrectResult() throws Exception {
         int num1 = 1, num2 = 2;
         String inputBody = """
                 {
@@ -32,7 +32,7 @@ class SpringMicroserviceDemoApplicationAssertJTests {
                 }
                 """.formatted(num1, num2);
 
-        String response = mockMvc.perform(post("/calculate/multipurposeAdd")
+        String response = mockMvc.perform(post("/calculate/universalAdd")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("numeralSystem", "DEC")
                         .content(inputBody))

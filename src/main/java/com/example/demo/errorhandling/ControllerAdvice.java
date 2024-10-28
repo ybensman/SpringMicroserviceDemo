@@ -36,6 +36,12 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>("Feature is not available", BAD_REQUEST);
     }
 
+    @ExceptionHandler(NumsLimitExceededException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public ResponseEntity<String> handleNumsLimitExceededException(NumsLimitExceededException ex) {
+        return new ResponseEntity<>("Bad request: " + ex.getMessage(), BAD_REQUEST);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
