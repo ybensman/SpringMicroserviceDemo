@@ -143,20 +143,18 @@ class CalculateControllerTest {
 
     @Test
     void givenUniversalAdd_whenInvalidInputBody_returnBadRequest() throws Exception {
-        int num1 = 1, num2 = 101;
         String body = """
                         {
-                            "num1": %d,
-                            "num2": %d
-                        }
-                        """.formatted(num1, num2);
+                            "num1": 1,
+                            "num2": "x"
+                        }""";
 
         mockMvc.perform(post("/calculate/universalAdd")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("numeralSystem", "DEC")
+                        .param("numeralSystem", "HEX")
                         .content(body))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(is(startsWith("Input validation failed"))))
+                .andExpect(content().string("Input validation failed"))
         ;
     }
 }

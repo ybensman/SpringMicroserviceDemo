@@ -3,16 +3,10 @@ package com.example.demo.model;
 import jakarta.validation.constraints.*;
 
 public record UniversalCalculateRequest(
-        @NotNull
         @NotBlank
-        @Min(1)
-        @Max(100)
-        @Pattern(regexp = "^[0-9]*[a-f]*$")
+        @Pattern(regexp = "^[a-fA-F0-9]+$")
         String num1,
-        @NotNull
         @NotBlank
-        @Min(1)
-        @Max(100)
-        @Pattern(regexp = "^[0-9]*[a-f]*$")
+        @Pattern(regexp = "^[a-fA-F0-9]+$")
         String num2) {
 }
